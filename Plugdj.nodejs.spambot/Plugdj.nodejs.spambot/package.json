@@ -1,0 +1,12 @@
+{
+  "name": "plugdj.nodejs.spambot",
+  "version": "0.0.0",
+  "description": "Plugdj.nodejs.spambot",
+  "main": "server.js",
+  "author": {
+    "name": "ngordat"
+  },
+  "dependencies": {
+    "plugapi": "^4.2.3"
+  }
+}

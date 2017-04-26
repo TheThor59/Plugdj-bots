@@ -1,0 +1,2 @@
+C:\Users\ngordat\Source\Repos\Plugdj-bots\Plugdj.nodejs.spambot\Plugdj.nodejs.spambot\obj\Debug\Plugdj.nodejs.spambot.njsprojResolveAssemblyReference.cache
+C:\Users\ngordat\Source\Repos\Plugdj-bots\Plugdj.nodejs.spambot\Plugdj.nodejs.spambot\bin\Microsoft.NodejsTools.WebRole.dll
