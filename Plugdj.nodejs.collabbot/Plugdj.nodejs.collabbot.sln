@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Plugdj.nodejs.spambot", "Plugdj.nodejs.spambot\Plugdj.nodejs.spambot.njsproj", "{40EFB358-2D37-4CD9-9031-2407317A5E52}"
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Plugdj.nodejs.collabbot", "Plugdj.nodejs.collabbot\Plugdj.nodejs.collabbot.njsproj", "{40EFB358-2D37-4CD9-9031-2407317A5E52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

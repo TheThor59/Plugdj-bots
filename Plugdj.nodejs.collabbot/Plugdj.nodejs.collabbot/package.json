@@ -1,10 +1,10 @@
 {
-  "name": "plugdj.nodejs.spambot",
+  "name": "plugdj.nodejs.collabbot",
   "version": "0.0.0",
-  "description": "Plugdj.nodejs.spambot",
+  "description": "Plugdj.nodejs.collabbot",
   "main": "server.js",
   "author": {
-    "name": "ngordat"
+    "name": "vpollet"
   },
   "dependencies": {
     "plugapi": "^4.2.3"
