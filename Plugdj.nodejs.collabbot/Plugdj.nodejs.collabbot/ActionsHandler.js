@@ -1,10 +1,12 @@
 ﻿(function () {
     'use strict';
     var PlugAPI = require('plugapi');
+	var MAX_SRIKES = 3;
 
     function ActionHandler() {
         this.params = null;
         this.connection = null;
+		this.strikes = {};
     }
 
     ActionHandler.prototype.connect = function (params, onSuccess, onFailure) {
@@ -33,11 +35,14 @@
     }
 
     ActionHandler.prototype.registerHandlers = function () {
-        console.log("Register - Registring in " + this.params.roomslug);
+        console.log("Register - Registering in " + this.params.roomslug);
         // Chat registration
         var self = this;
         this.connection.on('chat', function (data) {
             console.log(self.params.roomslug + ": " + data.from + "> " + data.message);
+            if (data.message && data.message.startsWith("!")){
+                self.handlerCommand(data);
+            }
         });
 		
 		this.connection.on('advance', function(data){ self.handlerAdvance(data); });
@@ -70,8 +75,72 @@
 				let dj = this.connection.getDJ();
 				this.connection.sendChat("[Collab Bot] Majority voted to pass the DJ  " + dj.username);
 				this.connection.moderateForceSkip();
+				if (!this.strikes[dj.username]){
+					this.strikes[dj.username] = 0;
+				}
+				this.strikes[dj.username] ++;
+				this.connection.sendChat("[Collab Bot] user " + dj.username + " has " + this.strikes[dj.username] + " strikes over " + MAX_SRIKES);
+                if (this.strikes[dj.username] >= MAX_SRIKES) {
+                    this.connection.sendChat("[Collab Bot] user " + dj.username + " reached max strikes, banning him");
+                    this.connection.moderateBanUser(dj.id, 4, PlugAPI.BAN.HOUR);
+                    this.strikes[dj.username] = 0;
+				}
 			}
-		}
+        }
+
+        ActionHandler.prototype.handlerCommand = function (data) {
+            var instruction = data.message.split(" ");
+            var command = instruction[0];
+            switch (command.toLowerCase()) {
+                case "!bestof":
+                    this.handlerBestOf(instruction);
+                    break;
+                default:
+                    this.connection.sendChat("[Collab Bot] No command " + command + " available");
+            }
+        }
+
+        ActionHandler.prototype.handlerBestOf = function (instruction) {
+            if (instruction[1]) {
+                switch (instruction[1].toLowerCase()) {
+                    case "add":
+                        this.handlerBestOfAdd();
+                        break;
+                    case "play":
+                        this.handlerBestOfPlay();
+                        break;
+                    default:
+                        this.connection.sendChat("[Collab Bot] No option " + instruction[1] + " on best of command");
+                }
+            } else {
+                this.connection.sendChat("[Collab Bot] Usage : !bestof [ACTION], possible actions : add, play, stop");
+            }
+        }
+
+        ActionHandler.prototype.handlerBestOfAdd = function () {
+            var media = this.connection.getMedia();
+            if (!media) {
+                this.connection.sendChat("[Collab Bot] Unable to add music, nothing is playing");
+                return;
+            }
+            var self = this;
+            this.connection.grab(function () {
+                self.connection.sendChat("[Collab Bot] added media " + media.title + " to best of");
+            });
+        }
+
+        ActionHandler.prototype.handlerBestOfPlay = function () {
+            this.connection.sendChat("[Collab Bot] starting best of collab room");
+            var waitList = this.connection.getWaitList();
+            for (var i = 0; i < waitList.length; i++) {
+                this.connection.moderateRemoveDJ(waitList[i].id);
+            }
+            var dj = this.connection.getDJ();
+            if (dj) {
+                this.connection.moderateRemoveDJ(dj.id);
+            }
+            this.connection.joinBooth();
+        }
 	}
     module.exports = new ActionHandler();
 })();
